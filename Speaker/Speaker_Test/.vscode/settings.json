@@ -12,6 +12,8 @@
     "periph_spiffs.h": "c",
     "esp_peripherals.h": "c",
     "i2s_std.h": "c",
-    "i2s.h": "c"
+    "i2s.h": "c",
+    "raw_stream.h": "c",
+    "speaker.h": "c"
   }
 }

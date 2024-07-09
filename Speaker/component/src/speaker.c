@@ -16,6 +16,8 @@
 #include "string.h"
 #include "driver/i2s_std.h"
 #include "speaker.h"
+#include "audio_forge.h"
+#include "raw_stream.h"
 
 // audio_pipeline_handler 將個別處理部分整合
 static audio_pipeline_handle_t play_pipeline;

@@ -13,46 +13,32 @@ void app_main(void) {
     initialize_audio_system();
 
     // 設置播放文件
-    set_audio("/spiffs/adf_music.mp3");
-
-    // 播放
-    play_audio();
+    set_audio("/spiffs/adf_music.mp3", 0);
+    set_audio("/spiffs/song_pixel.mp3", 1);
 
     // 控制音量
-    set_volume(-25);
+    set_volume(0);
 
-    int time = xTaskGetTickCount();
-    int index = 0;
+    // 播放
+    play_audio(0);
+    play_audio(1);
+    play_audio(2);  
+
     
     while (1) {
         // 監測播放狀態
         handle_audio_events();
 
-        if(xTaskGetTickCount() - time > 15000 / portTICK_PERIOD_MS) {
-
-            index += 1;
-            printf("case : %d\n", index+1);
-            
-            switch(index%=3)
-            {
-                case 0:
-                stop_audio();
-                set_audio("/spiffs/adf_music.mp3");
-                play_audio();
-                break;
-                case 1:
-                stop_audio();
-                set_audio("/spiffs/Recreation.mp3");
-                play_audio();
-                break;
-                case 2:
-                stop_audio();
-                set_audio("/spiffs/song_pixel.mp3");
-                play_audio();
-                break;
-            }
-            
-            time = xTaskGetTickCount();
+        printf("pipeline 1 state : %d\n", get_audio_state(0));
+        printf("pipeline 2 state : %d\n", get_audio_state(1));
+        printf("pipeline mix state : %d\n", get_audio_state(2));
+        
+        if(get_audio_state(1) == AEL_STATE_FINISHED || get_audio_state(1) == AEL_STATE_STOPPED)
+        {
+            stop_audio(2);
+            stop_audio(1);
+            play_audio(1);
+            play_audio(2);
         }
     }
 
