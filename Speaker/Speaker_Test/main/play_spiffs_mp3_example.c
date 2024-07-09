@@ -19,7 +19,7 @@ void app_main(void) {
     play_audio();
 
     // 控制音量
-    set_volume(-35);
+    set_volume(-25);
 
     int time = xTaskGetTickCount();
     int index = 0;
@@ -28,11 +28,12 @@ void app_main(void) {
         // 監測播放狀態
         handle_audio_events();
 
-        if(xTaskGetTickCount() - time > 4000 / portTICK_PERIOD_MS) {
+        if(xTaskGetTickCount() - time > 15000 / portTICK_PERIOD_MS) {
 
-            printf("case : %d\n", index);
-
-            switch(index%=5)
+            index += 1;
+            printf("case : %d\n", index+1);
+            
+            switch(index%=3)
             {
                 case 0:
                 stop_audio();
@@ -45,19 +46,12 @@ void app_main(void) {
                 play_audio();
                 break;
                 case 2:
-                pause_audio();
-                break;
-                case 3:
-                resume_audio();
-                break;
-                case 4:
                 stop_audio();
-                set_audio("/spiffs/guncock.mp3");
+                set_audio("/spiffs/song_pixel.mp3");
                 play_audio();
                 break;
             }
             
-            index += 1;
             time = xTaskGetTickCount();
         }
     }

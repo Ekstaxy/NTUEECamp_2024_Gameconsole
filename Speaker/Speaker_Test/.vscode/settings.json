@@ -1,0 +1,17 @@
+{
+  "C_Cpp.intelliSenseEngine": "default",
+  "idf.portWin": "COM8",
+  "idf.flashType": "UART",
+  "idf.adapterTargetName": "esp32",
+  "files.associations": {
+    "audio_element.h": "c",
+    "audio_pipeline.h": "c",
+    "audio_event_iface.h": "c",
+    "i2s_stream.h": "c",
+    "mp3_decoder.h": "c",
+    "periph_spiffs.h": "c",
+    "esp_peripherals.h": "c",
+    "i2s_std.h": "c",
+    "i2s.h": "c"
+  }
+}

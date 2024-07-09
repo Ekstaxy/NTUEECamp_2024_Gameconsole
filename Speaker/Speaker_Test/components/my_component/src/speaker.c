@@ -111,7 +111,7 @@ void play_audio() {
 void handle_audio_events()
 {
     // Read message (wait 100 ms)
-    esp_err_t ret = audio_event_iface_listen(evt, &msg, 100/portTICK_PERIOD_MS);
+    esp_err_t ret = audio_event_iface_listen(evt, &msg, 10/portTICK_PERIOD_MS);
 
     // If fail to read, continue
     if (ret != ESP_OK) {
@@ -155,12 +155,10 @@ int get_audio_state()
 
 // 暫停播放
 void pause_audio() {
-    if(msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.cmd == AEL_MSG_CMD_REPORT_STATUS &&
-        (((int)msg.data == AEL_STATUS_STATE_RUNNING)))
-        {
-            printf("Success : pause_audio()\n");
-            audio_pipeline_pause(play_pipeline);
-        }
+    if(get_audio_state() == AEL_STATE_RUNNING) {
+        printf("Success : pause_audio()\n");
+        audio_pipeline_pause(play_pipeline);
+    }
     else {
         printf("Error : pause_audio() didn't work\n");
     }
@@ -168,8 +166,7 @@ void pause_audio() {
 
 // 恢復播放
 void resume_audio() {
-    if(msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.cmd == AEL_MSG_CMD_REPORT_STATUS &&
-        (((int)msg.data == AEL_STATUS_STATE_PAUSED || (int)msg.data == AEL_STATUS_STATE_STOPPED))) {
+    if(get_audio_state() == AEL_STATE_PAUSED) {
         printf("Success : resume_audio()\n");
         audio_pipeline_resume(play_pipeline);
     }
