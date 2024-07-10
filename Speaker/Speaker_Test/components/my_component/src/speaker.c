@@ -205,29 +205,34 @@ void handle_audio_events()
     // Read message (wait 100 ms)
     esp_err_t ret = audio_event_iface_listen(evt, &msg, 1000/portTICK_PERIOD_MS);
 
-    // printf("%d\n", get_audio_state(2));
+    printf("%d\n", ret);
+
+    if(get_audio_state(2) == AEL_STATE_INIT) {
+        for(int i = 0 ; i < 2 ; i++) ret = audio_pipeline_run(pre_pipeline[i]);
+        audio_pipeline_run(mix_pipeline);
+    }
 
     // If fail to read, continue
     if (ret != ESP_OK) {
         return;
     }
 
-    // // Modify audio data
-    // for (int i = 0; i < NUMBER_SOURCE_FILE; i++) {
-    //     if (msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.source == (void *)audio_decoder[i]
-    //         && msg.cmd == AEL_MSG_CMD_REPORT_MUSIC_INFO) {
-    //         printf("Audio info is modified :\n");
-    //         audio_element_info_t music_info = {0};
-    //         audio_element_getinfo(audio_decoder[i], &music_info);
-    //         audio_forge_src_info_t src_info = {
-    //             .samplerate = music_info.sample_rates,
-    //             .channel = music_info.channels,
-    //             .bit_num = music_info.bits,
-    //         };
-    //         audio_forge_set_src_info(audio_forge, src_info, i);
-    //         printf("%d audio sample_rates = %d, bit depth = %d\n", i+1, music_info.sample_rates, music_info.bits);
-    //     }
-    // }
+    // Modify audio data
+    for (int i = 0; i < NUMBER_SOURCE_FILE; i++) {
+        if (msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.source == (void *)audio_decoder[i]
+            && msg.cmd == AEL_MSG_CMD_REPORT_MUSIC_INFO) {
+            printf("Audio info is modified :\n");
+            audio_element_info_t music_info = {0};
+            audio_element_getinfo(audio_decoder[i], &music_info);
+            audio_forge_src_info_t src_info = {
+                .samplerate = music_info.sample_rates,
+                .channel = music_info.channels,
+                .bit_num = music_info.bits,
+            };
+            audio_forge_set_src_info(audio_forge, src_info, i);
+            printf("%d audio sample_rates = %d, bit depth = %d\n", i+1, music_info.sample_rates, music_info.bits);
+        }
+    }
 
     // When finish playing, stop the pipeline and reset, wait for the next run
     if (msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.source == (void *) audio_decoder[PIPELINE_FIRST] && msg.cmd == AEL_MSG_CMD_REPORT_STATUS &&
@@ -258,7 +263,7 @@ int get_audio_state(int pipeline_index)
 {
     // return value comes from the data of i2s_stream_writer
     if(pipeline_index == PIPELINE_MIX) {
-        return audio_element_get_state(i2s_stream_writer);
+        return audio_element_get_state(audio_forge);
     }
     else {
         return audio_element_get_state(audio_decoder[pipeline_index]);

@@ -13,16 +13,16 @@ void app_main(void) {
     initialize_audio_system();
 
     // 設置播放文件
-    set_audio("/spiffs/adf_music.mp3", 0);
+    set_audio("/spiffs/Recreation.mp3", 0);
     set_audio("/spiffs/song_pixel.mp3", 1);
 
     // 控制音量
     set_volume(0);
 
     // 播放
-    play_audio(0);
-    play_audio(1);
-    play_audio(2);  
+    // play_audio(0);
+    // play_audio(1);
+    // play_audio(2);  
 
     
     while (1) {
