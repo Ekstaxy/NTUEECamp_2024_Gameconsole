@@ -19,47 +19,19 @@ void app_main(void) {
     play_audio();
 
     // 控制音量
-    set_volume(-35);
-
-    int time = xTaskGetTickCount();
-    int index = 0;
+    set_volume(-15);
     
     while (1) {
+
         // 監測播放狀態
         handle_audio_events();
 
-        if(xTaskGetTickCount() - time > 4000 / portTICK_PERIOD_MS) {
-
-            printf("case : %d\n", index);
-
-            switch(index%=5)
-            {
-                case 0:
-                stop_audio();
-                set_audio("/spiffs/adf_music.mp3");
-                play_audio();
-                break;
-                case 1:
-                stop_audio();
-                set_audio("/spiffs/Recreation.mp3");
-                play_audio();
-                break;
-                case 2:
-                pause_audio();
-                break;
-                case 3:
-                resume_audio();
-                break;
-                case 4:
-                stop_audio();
-                set_audio("/spiffs/guncock.mp3");
-                play_audio();
-                break;
-            }
-            
-            index += 1;
-            time = xTaskGetTickCount();
+        if(get_audio_state() == AEL_STATE_INIT) {
+            stop_audio();
+            set_audio("/spiffs/adf_music.mp3");
+            play_audio();
         }
+
     }
 
     // 停止並銷毀
