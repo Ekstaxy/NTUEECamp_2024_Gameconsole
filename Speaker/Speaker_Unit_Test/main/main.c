@@ -19,7 +19,9 @@ void app_main(void) {
     play_audio();
 
     // 控制音量
-    set_volume(-15);
+    set_volume(-25);
+
+    
     
     while (1) {
 
@@ -28,7 +30,7 @@ void app_main(void) {
 
         if(get_audio_state() == AEL_STATE_INIT) {
             stop_audio();
-            set_audio("/spiffs/adf_music.mp3");
+            set_audio("/spiffs/sample_music.mp3");
             play_audio();
         }
 
