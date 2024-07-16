@@ -52,30 +52,33 @@ void app_main(void) {
             lcdDrawFinish(&TFT_t);
             handle_audio_events();
 
-            // TO-DO
             /*
                 此次的實作為音檔播放完畢時的重啟
                 可用的 FUNCTION 有以下：
-                set_audio();
+                set_audio("/spiffs/sample_music.mp3");
                 play_audio();
                 stop_audio();
                 pause_audio();
                 resume_audio();
+                依照流程圖實作即可
             */
             if(get_audio_state() == AEL_STATE_FINISHED) {
 
-                // 中止播放
-                stop_audio();
+                // TO-DO
 
-                // 重新設定播放檔案
-                set_audio("/spiffs/sample_music.mp3");
+                // 1.
 
-                // 播放檔案
-                play_audio();
+
+                // 2.
+
+
+                // 3.
+
+
+                // TO-DO END
 
                 break;
             }
-            // TO-DO END
         }
     }
 
