@@ -45,7 +45,7 @@ void initialize_audio_system() {
     periph_spiffs_cfg_t spiffs_cfg = {
         .root = "/spiffs",
         .partition_label = NULL,
-        .max_files = 5,
+        .max_files = 15,
         .format_if_mount_failed = true
     };
     esp_periph_handle_t spiffs_handle = periph_spiffs_init(&spiffs_cfg);
@@ -111,7 +111,7 @@ void play_audio() {
 void handle_audio_events()
 {
     // Read message (wait 100 ms)
-    esp_err_t ret = audio_event_iface_listen(evt, &msg, 100/portTICK_PERIOD_MS);
+    esp_err_t ret = audio_event_iface_listen(evt, &msg, 20/portTICK_PERIOD_MS);
 
     // If fail to read, continue
     if (ret != ESP_OK) {
@@ -137,12 +137,12 @@ void handle_audio_events()
     if (msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.source == (void *) audio_decoder && msg.cmd == AEL_MSG_CMD_REPORT_STATUS &&
         ((int)msg.data == AEL_STATUS_STATE_FINISHED)) {
         printf("Audio is finished\n");
-        audio_pipeline_stop(play_pipeline);
-        audio_pipeline_wait_for_stop(play_pipeline);
-        audio_pipeline_terminate(play_pipeline);
-        audio_pipeline_reset_ringbuffer(play_pipeline);
-        audio_pipeline_reset_elements(play_pipeline);
-        audio_pipeline_change_state(play_pipeline, AEL_STATE_INIT);
+        // audio_pipeline_stop(play_pipeline);
+        // audio_pipeline_wait_for_stop(play_pipeline);
+        // audio_pipeline_terminate(play_pipeline);
+        // audio_pipeline_reset_ringbuffer(play_pipeline);
+        // audio_pipeline_reset_elements(play_pipeline);
+        // audio_pipeline_change_state(play_pipeline, AEL_STATE_INIT);
     }
 }
 
@@ -180,11 +180,11 @@ void resume_audio() {
 
 // 停止播放
 void stop_audio() {
-    if(get_audio_state() == AEL_STATE_RUNNING || get_audio_state() == AEL_STATE_PAUSED) {
+    if(get_audio_state() == AEL_STATE_RUNNING || get_audio_state() == AEL_STATE_PAUSED || get_audio_state() == AEL_STATE_FINISHED) {
         printf("Success : stop_audio()\n");
         audio_pipeline_stop(play_pipeline);
         audio_pipeline_wait_for_stop(play_pipeline);
-        audio_pipeline_terminate(play_pipeline);
+        // audio_pipeline_terminate(play_pipeline);
         audio_pipeline_reset_ringbuffer(play_pipeline);
         audio_pipeline_reset_elements(play_pipeline);
         audio_pipeline_change_state(play_pipeline, AEL_STATE_INIT);

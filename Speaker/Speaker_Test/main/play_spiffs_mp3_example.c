@@ -27,8 +27,9 @@ void app_main(void) {
     while (1) {
         // 監測播放狀態
         handle_audio_events();
+        printf("%d\n", get_audio_state());
 
-        if(xTaskGetTickCount() - time > 4000 / portTICK_PERIOD_MS) {
+        if(xTaskGetTickCount() - time > 10 / portTICK_PERIOD_MS) {
 
             printf("case : %d\n", index);
 

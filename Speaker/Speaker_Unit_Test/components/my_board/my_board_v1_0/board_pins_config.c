@@ -36,8 +36,8 @@ esp_err_t get_i2c_pins(i2c_port_t port, i2c_config_t *i2c_config)
 {
     AUDIO_NULL_CHECK(TAG, i2c_config, return ESP_FAIL);
     if (port == I2C_NUM_0 || port == I2C_NUM_1) {
-        i2c_config->sda_io_num = 18;
-        i2c_config->scl_io_num = 23;
+        i2c_config->sda_io_num = -1;
+        i2c_config->scl_io_num = -1;
     } else {
         i2c_config->sda_io_num = -1;
         i2c_config->scl_io_num = -1;
@@ -75,9 +75,9 @@ esp_err_t get_spi_pins(spi_bus_config_t *spi_config, spi_device_interface_config
     AUDIO_NULL_CHECK(TAG, spi_config, return ESP_FAIL);
     AUDIO_NULL_CHECK(TAG, spi_device_interface_config, return ESP_FAIL);
 
-    spi_config->mosi_io_num = -1;
+    spi_config->mosi_io_num = 23;
     spi_config->miso_io_num = -1;
-    spi_config->sclk_io_num = -1;
+    spi_config->sclk_io_num = 18;
     spi_config->quadwp_io_num = -1;
     spi_config->quadhd_io_num = -1;
 

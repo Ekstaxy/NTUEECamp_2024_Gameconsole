@@ -155,8 +155,7 @@ int get_audio_state()
 
 // 暫停播放
 void pause_audio() {
-    if(msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.cmd == AEL_MSG_CMD_REPORT_STATUS &&
-        (((int)msg.data == AEL_STATUS_STATE_RUNNING)))
+    if(get_audio_state() == AEL_STATE_RUNNING)
         {
             printf("Success : pause_audio()\n");
             audio_pipeline_pause(play_pipeline);
@@ -168,8 +167,7 @@ void pause_audio() {
 
 // 恢復播放
 void resume_audio() {
-    if(msg.source_type == AUDIO_ELEMENT_TYPE_ELEMENT && msg.cmd == AEL_MSG_CMD_REPORT_STATUS &&
-        (((int)msg.data == AEL_STATUS_STATE_PAUSED || (int)msg.data == AEL_STATUS_STATE_STOPPED))) {
+    if(get_audio_state() == AEL_STATE_PAUSED || get_audio_state() == AEL_STATE_STOPPED) {
         printf("Success : resume_audio()\n");
         audio_pipeline_resume(play_pipeline);
     }
@@ -184,7 +182,7 @@ void stop_audio() {
         printf("Success : stop_audio()\n");
         audio_pipeline_stop(play_pipeline);
         audio_pipeline_wait_for_stop(play_pipeline);
-        audio_pipeline_terminate(play_pipeline);
+        // audio_pipeline_terminate(play_pipeline); 這一行先拿掉看看
         audio_pipeline_reset_ringbuffer(play_pipeline);
         audio_pipeline_reset_elements(play_pipeline);
         audio_pipeline_change_state(play_pipeline, AEL_STATE_INIT);

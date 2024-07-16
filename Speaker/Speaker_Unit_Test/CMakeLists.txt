@@ -6,3 +6,5 @@ include($ENV{ADF_PATH}/CMakeLists.txt)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 project(Speaker_Unit_Test)
+
+spiffs_create_partition_image(storage tools FLASH_IN_PROJECT)
